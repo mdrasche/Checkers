@@ -6,6 +6,7 @@ def checkers(players=1,N=8):
 
 
 
+
 def gen_board():
     board = []
     square = 0
@@ -90,16 +91,11 @@ def required_move(board,player):
     for row in range(8):
         for space in range(8):
             if board[row][space] == player:
-                frontier.append((row,space)) #Locate the spaces where the player is
-    while frontier:
-        row,space = frontier.pop()
-        #print row,space
-        jumps = jumper(board,dir,other,row,space)
-        if jumps:
-            paths += jumps
-            for (prev,new) in jumps:
-                frontier.append(new)
+                jumps = jumper(board,dir,other,row,space)
+                if jumps:
+                    paths += jumps
     return paths
+
 
 
 def jumper(board, dir, other, row, space):
@@ -146,16 +142,20 @@ def select_piece(loc):
 #print create_row("w", 0)
 start = gen_board()
 #print start
-#test_board1 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'e', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
+test_board1 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'e', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
 #print_board(test_board1)
 #test_board2 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'b', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
 #print_board(test_board2)
 test_board3 = [[0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'b', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
 print_board(test_board3)
+test_board4 = [[0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'b', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'r', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
+print_board(test_board4)
 #print required_move(start, 'b')
 #print required_move(test_board1,'r')
 #print required_move(test_board2,'r')
 print required_move(test_board3,'r')
+print required_move(test_board4,'r')
+print required_move(start,'r')
 #print jumper(test_board1,-1,'b',4,1)
 #print jumper(test_board2,-1,'b',4,3)
 #print print_board(gen_board())
