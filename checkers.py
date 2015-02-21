@@ -76,43 +76,43 @@ def required_move(board,player):
 
     :param board:
     :param player: whose turn it is ('b' or 'r')
-    :return: move or moves that are required (jumps)
+    :return: move or moves that are required (jumps) as a list of ((current_pos), (new_pos)) tuples
     """
     paths = []
+    frontier=[]
     if player is 'b':
         dir = 1
         other = 'r'
     else:
         dir = -1
         other = 'b'
-    #TODO Account for king pieces
+    #TODO Account for king pieces...relatedly update board after each jump
     for row in range(8):
         for space in range(8):
             if board[row][space] == player:
-                jumps = jumper(board,dir,other,row,space, [])
-                if jumps:
-                    paths.append(jumps)
+                frontier.append((row,space)) #Locate the spaces where the player is
+    while frontier:
+        row,space = frontier.pop()
+        #print row,space
+        jumps = jumper(board,dir,other,row,space)
+        if jumps:
+            paths += jumps
+            for (prev,new) in jumps:
+                frontier.append(new)
     return paths
 
-def jumper(board, dir, other, row, space, required):
+
+def jumper(board, dir, other, row, space):
     """if there is a jump, how many jumps???"""
-    required.append((row,space))
     #TODO account for multiple direction options
+    required =[]
     if space < 6:
         if board[row + dir][space + 1] == other and board[row + 2*dir][space + 2] == 'e':
-            jumper(board, dir, other, row+2*dir, space+2, required)
+            required.append(((row,space),(row+2*dir, space+2)))
     if space > 2:
         if board[row + dir][space - 1] == other and board[row + 2*dir][space - 2] == 'e':
-            jumper(board, dir, other, row+2*dir, space-2, required)
-    if len(required) > 1:return tuple(required)
-    else: return False
-
-
-def check_right(board, dir, other, row, space, required):
-    if space < 6:
-        if board[row + dir][space + 1] == other and board[row + 2*dir][space + 2] == 'e':
-            jumper(board, dir, other, row+2*dir, space+2, required)
-
+            required.append(((row,space),(row+2*dir, space-2)))
+    return required
 
 
 def select_piece(loc):
@@ -146,13 +146,16 @@ def select_piece(loc):
 #print create_row("w", 0)
 start = gen_board()
 #print start
-test_board1 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'e', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
-print_board(test_board1)
-test_board2 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'b', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
+#test_board1 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'e', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
+#print_board(test_board1)
+#test_board2 = [[0, 'b', 0, 'b', 0, 'b', 0, 'b'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'b', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
 #print_board(test_board2)
+test_board3 = [[0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['b', 0, 'b', 0, 'b', 0, 'b', 0], [0, 'e', 0, 'e', 0, 'e', 0, 'e'], ['e', 0, 'b', 0, 'b', 0, 'e', 0], [0, 'e', 0, 'r', 0, 'e', 0, 'e'], ['r', 0, 'r', 0, 'r', 0, 'r', 0], [0, 'r', 0, 'r', 0, 'r', 0, 'r'], ['r', 0, 'r', 0, 'r', 0, 'r', 0]]
+print_board(test_board3)
 #print required_move(start, 'b')
 #print required_move(test_board1,'r')
-print required_move(test_board2,'r')
+#print required_move(test_board2,'r')
+print required_move(test_board3,'r')
 #print jumper(test_board1,-1,'b',4,1)
 #print jumper(test_board2,-1,'b',4,3)
 #print print_board(gen_board())
@@ -163,4 +166,3 @@ print required_move(test_board2,'r')
 #print move_piece(start, 'B3', 'C4')
 
 
-print test_board1[4][1]
